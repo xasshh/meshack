@@ -1,20 +1,33 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
     // Get form data
     $name = $_POST["name"];
     $email = $_POST["email"];
     $subject = $_POST["subject"];
     $message = $_POST["message"];
 
-    // Send email
-    $to = "your-adeoyemeshack37@gmail.com"; // Change this to your email address
-    $headers = "From: $name <$email>";
-    $body = "Subject: $subject\n\n$message";
+   require "vendor/autoload.php";
+   use PHPMailer\PHPMailer\PHPMailer;
+   use PHPMailer\PHPMailer\SMTP;
 
-    if (mail($to, $subject, $body, $headers)) {
-        echo "Thank you for contacting us. We will get back to you soon!";
-    } else {
-        echo "Sorry, there was an error sending your message. Please try again later.";
-    }
-}
+   $mail = new PHPMailer(true);
+   $mail->isSMTP();
+   $mail->SMTPAuth = true;
+
+
+   $mail->Host       = 'smtp.gmail.com';                     // Specify main and
+   $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+   $mail->port =   587;
+
+   $mail->username =  "your-email@gmail.com"; 
+   $mail->password =  "password";
+
+   $mail->setFrom($email, $name);
+   $mail->addAddress("adeoyemeshack37@gmail.com", "Adeoye Meshack"); 
+
+   $mail->Subject =$subject;
+   $mail->Body = $message;
+
+   $mail->send();
+   echo "email sent";
 ?>
